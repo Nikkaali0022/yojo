@@ -6,12 +6,13 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YojoRoot() {
     var selectedTab by remember { mutableStateOf(0) }
+    val navController = rememberNavController()
     
     Scaffold(
         bottomBar = {
@@ -51,14 +52,14 @@ fun YojoRoot() {
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
-                0 -> com.yojo.app.ui.home.HomeScreen()
-                1 -> com.yojo.app.ui.explore.ExploreScreen()
-                2 -> com.yojo.app.ui.upload.UploadScreen()
+                0 -> com.yojo.app.ui.home.HomeScreen(navController = navController)
+                1 -> com.yojo.app.ui.explore.ExploreScreen(navController = navController)
+                2 -> com.yojo.app.ui.upload.UploadScreen(navController = navController)
                 3 -> com.yojo.app.ui.play.PlayScreen(
                     onNavigateToLudo = {},
                     onNavigateToRooms = {}
                 )
-                4 -> com.yojo.app.ui.profile.ProfileScreen()
+                4 -> com.yojo.app.ui.profile.ProfileScreen(navController = navController)
             }
         }
     }
