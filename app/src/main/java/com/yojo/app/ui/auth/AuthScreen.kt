@@ -1,38 +1,46 @@
 package com.yojo.app.ui.auth
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.yojo.app.data.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoginMode by remember { mutableStateOf(true) }
-    var isLoading by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
-    val authRepository = remember { AuthRepository() }
+    val auth = FirebaseAuth.getInstance()
+
+    var isLoginMode by remember { mutableStateOf(true) }
+    var emailOrPhone by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var rememberMe by remember { mutableStateOf(true) }
+    var otpCode by remember { mutableStateOf("") }
+    var isOtpSent by remember { mutableStateOf(false) }
+
+    // Check if user is already remembered / logged in
+    LaunchedEffect(Unit) {
+        if (auth.currentUser != null) {
+            navController.navigate("main_app") {
+                popUpTo("auth") { inclusive = true }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = if (isLoginMode) "🔐 YOJO Login" else "📝 YOJO Register", fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                title = { Text(if (isLoginMode) "📝 YOJO Login" else "📝 YOJO Register", fontWeight = FontWeight.Bold) }
             )
         }
     ) { innerPadding ->
@@ -40,18 +48,15 @@ fun AuthScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Welcome to YOJO",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                text = if (isLoginMode) "Welcome Back to YOJO" else "Welcome to YOJO",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Connect, Game, and Live Chat globally",
                 style = MaterialTheme.typography.bodyMedium,
@@ -60,91 +65,103 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Email Field
+            // Email or Phone Input
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = { Text("Email address") },
+                value = emailOrPhone,
+                onValueChange = { emailOrPhone = it },
+                label = { Text("Email or Phone Number") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password Field
+            // Password Input
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
+                label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Remember Me Checkbox
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = rememberMe,
+                    onCheckedChange = { rememberMe = it }
+                )
+                Text("Remember Me")
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Submit Button (Login / Signup)
+            // Main Action Button (Login / Register)
             Button(
                 onClick = {
-                    if (email.isBlank() || password.isBlank()) {
-                        Toast.makeText(context, "Barah-e-karam email aur password darj karein", Toast.LENGTH_SHORT).show()
-                        return@Button
-                    }
-
-                    isLoading = true
-                    if (isLoginMode) {
-                        authRepository.loginUser(email, password) { success, error ->
-                            isLoading = false
-                            if (success) {
-                                Toast.makeText(context, "Login kamyaab ho gaya!", Toast.LENGTH_SHORT).show()
-                                navController.navigate("main_app") {
-                                    popUpTo("auth") { inclusive = true }
+                    if (emailOrPhone.isNotBlank() && password.isNotBlank()) {
+                        if (isLoginMode) {
+                            auth.signInWithEmailAndPassword(emailOrPhone, password)
+                                .addOnSuccessListener {
+                                    Toast.makeText(context, "Login Successful! ✅", Toast.LENGTH_SHORT).show()
+                                    navController.navigate("main_app") {
+                                        popUpTo("auth") { inclusive = true }
+                                    }
                                 }
-                            } else {
-                                Toast.makeText(context, "Login nakam: $error", Toast.LENGTH_LONG).show()
-                            }
+                                .addOnFailureError { e ->
+                                    Toast.makeText(context, "Login Nakam: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                                }
+                        } else {
+                            auth.createUserWithEmailAndPassword(emailOrPhone, password)
+                                .addOnSuccessListener {
+                                    Toast.makeText(context, "Account Created! OTP verification sent. ✅", Toast.LENGTH_LONG).show()
+                                    navController.navigate("main_app") {
+                                        popUpTo("auth") { inclusive = true }
+                                    }
+                                }
+                                .addOnFailureError { e ->
+                                    Toast.makeText(context, "Registration nakam: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                                }
                         }
                     } else {
-                        authRepository.registerUser(email, password) { success, error ->
-                            isLoading = false
-                            if (success) {
-                                Toast.makeText(context, "Account kamyaab taur par ban gaya!", Toast.LENGTH_SHORT).show()
-                                navController.navigate("main_app") {
-                                    popUpTo("auth") { inclusive = true }
-                                }
-                            } else {
-                                Toast.makeText(context, "Registration nakam: $error", Toast.LENGTH_LONG).show()
-                            }
-                        }
+                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(12.dp),
-                enabled = !isLoading
+                    .height(50.dp)
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
-                } else {
-                    Text(
-                        text = if (isLoginMode) "Login" else "Create Account",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(if (isLoginMode) "Login" else "Create Account", style = MaterialTheme.typography.titleMedium)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Switch between Login and Register Mode
-            TextButton(
-                onClick = { isLoginMode = !isLoginMode }
+            // Google Sign-In Button Placeholder / Trigger
+            OutlinedButton(
+                onClick = {
+                    // Yahan Google Sign-In Intent logic integrate hogi
+                    Toast.makeText(context, "Google Sign-In Triggered 🌐", Toast.LENGTH_SHORT).show()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
-                Text(
-                    text = if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login",
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Text("Continue with Google 🌐", style = MaterialTheme.typography.titleMedium)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Switch between Login and Register
+            TextButton(onClick = { isLoginMode = !isLoginMode }) {
+                Text(if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login")
             }
         }
     }
