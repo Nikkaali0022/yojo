@@ -20,11 +20,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Print Signing Report (SHA Keys)
-      run: ./gradlew signingReport
-
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Find and Run Signing Report
+      run: |
+        if [ -f "./gradlew" ]; then
+          chmod +x gradlew
+          ./gradlew signingReport
+        else
+          gradle signingReport
+        fi
