@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.yojo.app.ui.home.HomeScreen
 import com.yojo.app.ui.explore.ExploreScreen
 import com.yojo.app.ui.upload.UploadScreen
@@ -16,6 +17,7 @@ import com.yojo.app.ui.profile.ProfileScreen
 @Composable
 fun MainScreen() {
     var selectedItem by remember { mutableStateOf(0) }
+    val navController = rememberNavController()
     val items = listOf("Home", "Explore", "Upload", "Play", "Profile")
     val icons = listOf(
         Icons.Default.Home,
@@ -41,14 +43,14 @@ fun MainScreen() {
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedItem) {
-                0 -> HomeScreen()
-                1 -> ExploreScreen()
-                2 -> UploadScreen()
+                0 -> HomeScreen(navController = navController)
+                1 -> ExploreScreen(navController = navController)
+                2 -> UploadScreen(navController = navController)
                 3 -> PlayScreen(
                     onNavigateToLudo = {},
                     onNavigateToRooms = {}
                 )
-                4 -> ProfileScreen()
+                4 -> ProfileScreen(navController = navController)
             }
         }
     }
