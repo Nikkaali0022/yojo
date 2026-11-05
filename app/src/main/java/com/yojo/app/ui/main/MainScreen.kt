@@ -22,6 +22,7 @@ import com.yojo.app.ui.home.HomeScreen
 import com.yojo.app.ui.play.PlayScreen
 import com.yojo.app.ui.profile.ProfileScreen
 import com.yojo.app.ui.upload.UploadScreen
+import com.yojo.app.ui.play.ludo.LudoGameScreen
 
 @Composable
 fun MainScreen() {
@@ -84,6 +85,11 @@ fun MainScreen() {
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(navController = navController)
+            }
+            // Ludo Match Screen Route with Room ID argument
+            composable("ludo_match/{roomId}") { backStackEntry ->
+                val roomId = backStackEntry.arguments?.getString("roomId") ?: "default_room"
+                LudoGameScreen(navController = navController, roomId = roomId)
             }
         }
     }
