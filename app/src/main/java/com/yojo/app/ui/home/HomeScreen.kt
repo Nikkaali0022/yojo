@@ -1,4 +1,4 @@
-\package com.yojo.app.ui.home
+package com.yojo.app.ui.home
 
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -24,7 +25,6 @@ import androidx.media3.ui.PlayerView
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    // Sample Video URLs (Aap yahan apni Firebase ya API ki videos dalenge)
     val videoList = listOf(
         "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
@@ -38,7 +38,6 @@ fun HomeScreen(navController: NavController) {
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // Vertical Pager for TikTok style scrolling
         VerticalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
@@ -46,7 +45,6 @@ fun HomeScreen(navController: NavController) {
             ReelItem(videoUrl = videoList[page], isCurrentPage = pagerState.currentPage == page)
         }
 
-        // Top Header Tabs (For You / Following / STEM)[cite: 4]
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,16 +52,29 @@ fun HomeScreen(navController: NavController) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Following", color = Color.White.copy(alpha = 0.7f), fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 8.dp))
-            Text(" | ", color = Color.White.copy(alpha = 0.5f))
-            Text("For You", color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 8.dp))
+            Text(
+                text = "Following",
+                color = Color.White.copy(alpha = 0.7f),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Text(
+                text = " | ",
+                color = Color.White.copy(alpha = 0.5f)
+            )
+            Text(
+                text = "For You",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
         }
     }
 }
 
 @Composable
 fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     var isLiked by remember { mutableStateOf(false) }
 
     val exoPlayer = remember {
@@ -87,7 +98,6 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Video View
         AndroidView(
             factory = {
                 PlayerView(context).apply {
@@ -98,7 +108,6 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
             modifier = Modifier.fillMaxSize()
         )
 
-        // Overlay UI (Captions & Action Buttons like TikTok)[cite: 4]
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -106,7 +115,6 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom
         ) {
-            // Left Side: Captions & Username[cite: 4]
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -126,12 +134,10 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
                 )
             }
 
-            // Right Side: Action Buttons (Like, Comment, Share)[cite: 4]
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(bottom = 32.dp)
             ) {
-                // Like Button[cite: 4]
                 IconButton(onClick = { isLiked = !isLiked }) {
                     Icon(
                         imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -140,12 +146,15 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
                         modifier = Modifier.size(36.dp)
                     )
                 }
-                Text("14", color = Color.White, style = MaterialTheme.typography.bodySmall)[cite: 4]
+                Text(
+                    text = "14",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodySmall
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Comments Button[cite: 4]
-                IconButton(onClick = { /* Open Comments */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         imageVector = Icons.Default.ModeComment,
                         contentDescription = "Comments",
@@ -153,12 +162,15 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
                         modifier = Modifier.size(34.dp)
                     )
                 }
-                Text("Add 1st", color = Color.White, style = MaterialTheme.typography.bodySmall)[cite: 4]
+                Text(
+                    text = "Add 1st",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodySmall
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Share Button[cite: 4]
-                IconButton(onClick = { /* Share */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = "Share",
@@ -166,7 +178,11 @@ fun ReelItem(videoUrl: String, isCurrentPage: Boolean) {
                         modifier = Modifier.size(34.dp)
                     )
                 }
-                Text("Share", color = Color.White, style = MaterialTheme.typography.bodySmall)[cite: 4]
+                Text(
+                    text = "Share",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }
