@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -19,17 +20,20 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.yojo.app.navigation.Screen
 import com.yojo.app.ui.home.HomeScreen
+import com.yojo.app.ui.explore.ExploreScreen
+import com.yojo.app.ui.upload.UploadScreen
 import com.yojo.app.ui.play.PlayScreen
 import com.yojo.app.ui.profile.ProfileScreen
-import com.yojo.app.ui.upload.UploadScreen
 import com.yojo.app.ui.play.ludo.LudoGameScreen
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
 
+    // 5 Primary Navigation Tabs (Home, Explore, Upload, Play, Profile)
     val items = listOf(
         NavigationItem("Home", Screen.Home.route, Icons.Default.Home),
+        NavigationItem("Explore", "explore", Icons.Default.Explore),
         NavigationItem("Upload", Screen.Upload.route, Icons.Default.AddBox),
         NavigationItem("Play", Screen.Play.route, Icons.Default.Gamepad),
         NavigationItem("Profile", Screen.Profile.route, Icons.Default.Person)
@@ -76,6 +80,9 @@ fun MainScreen() {
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(navController = navController)
+            }
+            composable("explore") {
+                ExploreScreen(navController = navController)
             }
             composable(Screen.Upload.route) {
                 UploadScreen(navController = navController)
