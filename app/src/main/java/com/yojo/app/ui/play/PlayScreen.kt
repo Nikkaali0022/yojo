@@ -1,4 +1,4 @@
-package com.yojo.app.ui.play
+\package com.yojo.app.ui.play
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.yojo.app.ui.play.rooms.LiveRoomsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +30,7 @@ fun PlayScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold
                 )
             },
-            colors = TopAppBarDefaults.topAppBarColors(
+            colors = TopAppBarDefaults.topAppBarcols(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         )
@@ -47,6 +48,7 @@ fun PlayScreen(navController: NavController) {
             }
         }
 
+        // Tab selection ke mutabiq screen dikھانا
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -55,7 +57,7 @@ fun PlayScreen(navController: NavController) {
         ) {
             when (selectedTabIndex) {
                 0 -> GamesHubContent(navController)
-                1 -> LiveRoomsContent(navController)
+                1 -> LiveRoomsScreen(navController) // Yeh ab live rooms ki mukammal screen kholay ga
             }
         }
     }
@@ -73,7 +75,6 @@ fun GamesHubContent(navController: NavController) {
             fontWeight = FontWeight.Bold
         )
         
-        // Ludo Card Button - Click par Ludo Game Screen par navigate karega
         Card(
             onClick = { 
                 navController.navigate("ludo_match/room_yojo_101")
@@ -105,34 +106,5 @@ fun GamesHubContent(navController: NavController) {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun LiveRoomsContent(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Live Voice Rooms",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Button(onClick = { /* Naya Room Banane ka Dialog */ }) {
-                Text(text = "+ Room Banayein")
-            }
-        }
-
-        Text(
-            text = "Creators ki taraf se banaye gaye public aur private audio rooms join karein.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
