@@ -88,4 +88,7 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
+
+    // Google Sign-In SDK
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 }
