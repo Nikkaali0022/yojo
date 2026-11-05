@@ -25,10 +25,7 @@ fun AuthScreen(navController: NavController) {
     var emailOrPhone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(true) }
-    var otpCode by remember { mutableStateOf("") }
-    var isOtpSent by remember { mutableStateOf(false) }
 
-    // Check if user is already remembered / logged in
     LaunchedEffect(Unit) {
         if (auth.currentUser != null) {
             navController.navigate("main_app") {
@@ -65,7 +62,6 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Email or Phone Input
             OutlinedTextField(
                 value = emailOrPhone,
                 onValueChange = { emailOrPhone = it },
@@ -77,7 +73,6 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Password Input
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -90,7 +85,6 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Remember Me Checkbox
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -104,7 +98,6 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Main Action Button (Login / Register)
             Button(
                 onClick = {
                     if (emailOrPhone.isNotBlank() && password.isNotBlank()) {
@@ -122,7 +115,7 @@ fun AuthScreen(navController: NavController) {
                         } else {
                             auth.createUserWithEmailAndPassword(emailOrPhone, password)
                                 .addOnSuccessListener {
-                                    Toast.makeText(context, "Account Created! OTP verification sent. ✅", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Account Created! ✅", Toast.LENGTH_LONG).show()
                                     navController.navigate("main_app") {
                                         popUpTo("auth") { inclusive = true }
                                     }
@@ -144,10 +137,8 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Google Sign-In Button Placeholder / Trigger
             OutlinedButton(
                 onClick = {
-                    // Yahan Google Sign-In Intent logic integrate hogi
                     Toast.makeText(context, "Google Sign-In Triggered 🌐", Toast.LENGTH_SHORT).show()
                 },
                 modifier = Modifier
@@ -159,7 +150,6 @@ fun AuthScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Switch between Login and Register
             TextButton(onClick = { isLoginMode = !isLoginMode }) {
                 Text(if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login")
             }
