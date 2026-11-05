@@ -73,9 +73,10 @@ fun GamesHubContent(navController: NavController) {
             fontWeight = FontWeight.Bold
         )
         
+        // Ludo Card Button - Click par Ludo Game Screen par navigate karega
         Card(
             onClick = { 
-                // Yahan Ludo screen par navigate hoga
+                navController.navigate("ludo_match/room_yojo_101")
             },
             modifier = Modifier
                 .fillMaxWidth()
