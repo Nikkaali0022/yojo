@@ -13,13 +13,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yojo.app.ui.auth.AuthScreen
 import com.yojo.app.ui.main.MainScreen
-import com.yojo.app.ui.theme.YOJOTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            YOJOTheme {
+            MaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -36,11 +35,9 @@ fun YojoNavGraph() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "auth") {
-        // Login & Signup Screen
         composable("auth") {
             AuthScreen(navController = navController)
         }
-        // Main App with Bottom Navigation (Home, Explore, Upload, Play, Profile)
         composable("main_app") {
             MainScreen()
         }
