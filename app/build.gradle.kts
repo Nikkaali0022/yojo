@@ -59,11 +59,15 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     
-    // Material Icons Extended (Sabhi icons ke liye zaroori hai)
+    // Material Icons Extended
     implementation("androidx.compose.material:material-icons-extended")
 
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Jetpack Media3 ExoPlayer for Short Videos Feed
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-ui:1.2.0")
 
     // Firebase BoM (Bill of Materials)
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
