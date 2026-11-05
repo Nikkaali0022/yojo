@@ -59,6 +59,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     
+    // Material Icons Extended (Sabhi icons ke liye zaroori hai)
+    implementation("androidx.compose.material:material-icons-extended")
+
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
