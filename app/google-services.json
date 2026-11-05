@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "809869263099",
+    "project_id": "yojo-88a93",
+    "storage_bucket": "yojo-88a93.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809869263099:android:3615d0fe044d4857e9f05e",
+        "android_client_info": {
+          "package_name": "com.yojo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGzXh6MBWqXaGRfSoez9tFLF86loVhZwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
