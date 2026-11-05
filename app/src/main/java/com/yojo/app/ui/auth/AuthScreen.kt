@@ -37,7 +37,12 @@ fun AuthScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (isLoginMode) "📝 YOJO Login" else "📝 YOJO Register", fontWeight = FontWeight.Bold) }
+                title = {
+                    Text(
+                        text = if (isLoginMode) "📝 YOJO Login" else "📝 YOJO Register",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             )
         }
     ) { innerPadding ->
@@ -109,7 +114,7 @@ fun AuthScreen(navController: NavController) {
                                         popUpTo("auth") { inclusive = true }
                                     }
                                 }
-                                .addOnFailureError { e ->
+                                .addOnFailureListener { e ->
                                     Toast.makeText(context, "Login Nakam: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
                                 }
                         } else {
@@ -120,7 +125,7 @@ fun AuthScreen(navController: NavController) {
                                         popUpTo("auth") { inclusive = true }
                                     }
                                 }
-                                .addOnFailureError { e ->
+                                .addOnFailureListener { e ->
                                     Toast.makeText(context, "Registration nakam: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
                                 }
                         }
@@ -132,7 +137,10 @@ fun AuthScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text(if (isLoginMode) "Login" else "Create Account", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = if (isLoginMode) "Login" else "Create Account",
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -145,13 +153,18 @@ fun AuthScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Continue with Google 🌐", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = "Continue with Google 🌐",
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = { isLoginMode = !isLoginMode }) {
-                Text(if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login")
+                Text(
+                    text = if (isLoginMode) "Don't have an account? Register" else "Already have an account? Login"
+                )
             }
         }
     }
